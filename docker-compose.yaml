@@ -1,0 +1,57 @@
+version: '2'
+
+services:
+  php:
+    build:
+      context: ./opt/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./pro/web:/var/www/html
+#      - ./conf/php:/usr/local/etc/php/conf.d
+
+#  golang:
+#    build:
+#      context: ./opt/golang
+#      dockerfile: Dockerfile
+
+  mysql:
+    build:
+      context: ./opt/mysql
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: '123456'
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+  nginx:
+    build:
+      context: ./opt/nginx
+      dockerfile: Dockerfile
+    depends_on:
+      - php
+    volumes_from:
+      - php
+    volumes:
+      - ./conf/nginx:/etc/nginx/conf.d
+    ports:
+      - 80:80
+
+  memcached:
+    build:
+      context: ./opt/memcached
+      dockerfile: Dockerfile
+
+  redis:
+    build:
+      context: ./opt/redis
+      dockerfile: Dockerfile
+    volumes:
+      - ./data/redis:/data/db
+
+  mongo:
+    build:
+      context: ./opt/mongo
+      dockerfile: Dockerfile
+    volumes:
+      - ./data/mongo:/data/db
+
