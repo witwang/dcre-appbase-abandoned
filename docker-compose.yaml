@@ -6,13 +6,10 @@ services:
       context: ./opt/php
       dockerfile: Dockerfile
     volumes:
+      - ./conf/php/php.ini:/usr/local/etc/php/php.ini
+      - ./logs/php:/var/log/php
       - ./pro/web:/var/www/html
-#      - ./conf/php:/usr/local/etc/php/conf.d
-
-#  golang:
-#    build:
-#      context: ./opt/golang
-#      dockerfile: Dockerfile
+  #    entrypoint: /tmp/entrypoint.sh
 
   mysql:
     build:
@@ -33,8 +30,12 @@ services:
       - php
     volumes:
       - ./conf/nginx:/etc/nginx/conf.d
+      - ./logs/nginx:/var/log/nginx
     ports:
       - 80:80
+      - 82:82
+      - 83:83
+      - 88:88
 
   memcached:
     build:
@@ -60,7 +61,7 @@ services:
       context: ./tools/phpmyadmin
       dockerfile: Dockerfile
     ports:
-      - "81:80"
+      - 81:80
     environment:
       PMA_HOST: "mysql"
       PMA_USER: "root"
